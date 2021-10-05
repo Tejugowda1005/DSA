@@ -7,11 +7,6 @@ using namespace std;
 2) Maintain a queue and push all nodes having indegree 0 into the queue
 3) Now do bfs using that queue , the way elements will be popped out of queue is the topo sort for the graph
 
-
-If it has multiple components do one thing, to get indegrees get those for each component and then find the Topo sort
-
-
-6 5 0 1 2 3 4 
 */
 
 
