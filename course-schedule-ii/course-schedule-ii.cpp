@@ -1,20 +1,44 @@
 class Solution {
 public:
-    void dfs(map<int, vector<int>> &adj, vector<int> &incoming, map<int, bool> &vis, vector<int> &res, int node) {
+    
+    void dfsTopo(map<int, vector<int>> &adj, stack<int> &resStack, map<int, bool> &vis, int node) {
         
-        res.push_back(node);
+        vis[node] = 1;
         for(auto x:adj[node]) {
-            
             if(!vis[x]){
-                if(--incoming[x] > 0) {
-                    continue;
-                }
-                
-                vis[x] = 1;
-                dfs(adj, incoming, vis, res, x);
+                dfsTopo(adj, resStack, vis, x);
             }
         }
+        resStack.push(node);
+    }
+    
+    
+    
+    bool dfs(map<int, vector<int>> &adj, map<int, bool> &recStack, map<int, bool> &vis, int node) {
         
+        recStack[node] = vis[node] = 1;
+        bool res = 0;
+        for(auto x:adj[node]) {
+            if(!vis[x]){
+                res = res | dfs(adj, recStack, vis, x);
+            } else if(recStack[x]){
+                res = 1;
+                break;
+            }
+        }
+        recStack[node] = 0;
+        return res;
+    }
+    
+    bool detectCycle(map<int, vector<int>> &adj, int n) {
+        map<int, bool> vis, recStack;
+        
+        for(int i = 0; i <n; ++i) {
+            if(!vis[i] && dfs(adj, recStack, vis, i)) {
+                return 1;
+            }
+        }
+        return 0;
     }
     
     
@@ -26,33 +50,33 @@ public:
         
         map<int, vector<int>> adj;
         
-        vector<int> incoming(numCourses);
         
         for(int i = 0; i < prlen; ++i) {
             adj[prerequisites[i][0]].push_back(prerequisites[i][1]);
-            ++incoming[prerequisites[i][1]];
         }
+        
         
         
         vector<int> res;
-        map<int, bool> vis;
         
-        int lastSize = -1;
+        if(detectCycle(adj, numCourses)) {
+            return res;
+        }
+        
+        map<int, bool> vis;
+        stack<int> resStack;
         
         for(int i = 0; i < numCourses; ++i){
-            if(!vis[i] && incoming[i]==0) {
-                vis[i] = 1;
-                dfs(adj, incoming, vis, res, i);
-            }
-            
-            if(i==numCourses-1 && res.size() < numCourses) {
-                if(lastSize==res.size()) {
-                    return {};
-                }
-                lastSize = res.size();
-                i=0; 
+            if(!vis[i]) {
+                dfsTopo(adj, resStack, vis, i);
             }
         }
+        
+        while(!resStack.empty()) {
+            res.push_back(resStack.top());
+            resStack.pop();
+        }
+        
         return res;
     }
 };
