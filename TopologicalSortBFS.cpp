@@ -91,8 +91,7 @@ void TopologicalSortBFS(map<int, vector<int>> &adj, int n, vector<int> &TopoSort
 
     //3) Now do bfs using that queue , the way elements will be popped out of queue is the topo sort for the graph
 
-    // jaage ki bachat
-    vis.clear();
+ 
 
     while(!q.empty()) {
         int node = q.front();
@@ -101,7 +100,7 @@ void TopologicalSortBFS(map<int, vector<int>> &adj, int n, vector<int> &TopoSort
 
         for(auto x:adj[node]) {
             --indegree[x];
-            if(!vis[x]) {
+            if(indegree[x]==0) {
                 vis[x] = 1;
                 q.push(x);
             }
