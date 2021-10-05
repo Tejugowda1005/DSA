@@ -46,6 +46,7 @@ void getIndegree(map<int, vector<int>> &adj, map<int, int> &indegree, map<int, b
 
     queue<int> q;
     indegree[node] = 0;
+    vis[node] = 1;
     q.push(node);
 
     while(!q.empty()) {
@@ -99,8 +100,8 @@ void TopologicalSortBFS(map<int, vector<int>> &adj, int n, vector<int> &TopoSort
         TopoSort.push_back(node);
 
         for(auto x:adj[node]) {
+            --indegree[x];
             if(!vis[x]) {
-                --indegree[x];
                 vis[x] = 1;
                 q.push(x);
             }
