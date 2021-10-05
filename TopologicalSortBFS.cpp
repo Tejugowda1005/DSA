@@ -101,7 +101,6 @@ void TopologicalSortBFS(map<int, vector<int>> &adj, int n, vector<int> &TopoSort
         for(auto x:adj[node]) {
             --indegree[x];
             if(indegree[x]==0) {
-                vis[x] = 1;
                 q.push(x);
             }
         }
